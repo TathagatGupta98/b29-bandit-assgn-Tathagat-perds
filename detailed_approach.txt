@@ -1,0 +1,49 @@
+Level 0: Found a readme file in the home directory and read it using cat readme.
+
+Level 1: Tried reading a file literally named -. A standard cat - doesn't work because the terminal expects an argument, so I provided the path: ./- 
+
+Level 2: The file had spaces and started with dashes (--spaces in this filename--). To prevent the terminal from treating the dashes as a command flag, I used cat -- '--spaces in this filename--'.
+
+Level 3: navigated into the inhere directory. A standard ls showed nothing, meaning the file was hidden. Used ls -a to reveal it and grab the flag.
+
+Level 4: Found 9 files in the inhere directory. Used find command to check for contents inside the files, and only file07 contained human-readable text.
+
+Level 5: Had to locate a specific 1033-byte file hidden across 19 directories. I used du ./ -ab to list all file sizes in exact bytes, spotting the target file inside maybehere07.
+
+Level 6: Searched the entire server for a 33-byte file owned by bandit7 and grouped to bandit6 using find / -user bandit7 -group bandit6 -size 33c. Ignored the permission denied errors and found the flag in /var/lib/dpkg/info/.
+
+Level 7: The password was hidden next to the word 'millionth'. Piped the file output directly into a search: cat data.txt | grep millionth.
+
+Level 8: Needed to find the only non-repeating line in a file. Sorted the text first, then filtered for uniqueness: sort data.txt | uniq -u.
+
+Level 9: The flag was buried inside a binary file next to an '=' sign. Used strings data.txt | grep '=' to extract the readable text and isolate the password.
+
+Level 10: The text was base64 encoded. Decoded it straight from the terminal using base64 --decode data.txt.
+
+Level 11: The file was encrypted with a ROT13 cipher. I mapped the alphabet shift using tr to translate the rotated characters back to normal.
+
+Level 12: A tedious compression puzzle. I had to repeatedly decompress a file using a mix of gzip, bzip2, and tar, analyzing the file type at each step until the raw text was finally revealed.
+
+Level 13: Copied the provided private SSH key to log in directly as bandit14 and read the next password file.
+
+Level 14: Submitted the current password to a local remote server using nc localhost 30000 to receive the next flag.
+
+Level 15: (Password retrieved for the next level).
+
+Level 16: Used nmap to scan for open ports and identify which ones were running SSL. I found the active server that wasn't just echoing input, sent the current password, and received an RSA private key to log into level 17.
+
+Level 17: Compared passwords.old and passwords.new using the diff command to easily spot the modified line containing the new password.
+
+Level 18: The .bashrc was modified to immediately kick users out upon login. I bypassed the interactive shell entirely by passing a command directly through SSH: ssh -p 2220 bandit18@... "cat readme".
+
+Level 19: Found a setuid binary (bandit20-do) that allowed me to execute commands as the next user. Used it to read bandit20's password file.
+
+Level 20: Set up a local listening port using nc. I ran the suconnect binary, pointed it at my open port, and manually fed it the current password to get the next one in return.
+
+Level 21: Investigated the /etc/cron.d/ directory and traced a scheduled cron job script to see exactly where it was writing the password.
+
+Level 22: Another cron job, but this script generated its target filename by hashing the username. I replicated the MD5 hashing process locally to predict the exact filename and retrieved it from /tmp.
+
+Level 23: A cron job was executing and deleting any scripts placed in a specific folder. I wrote a quick bash script to copy the bandit24 password to a readable file in /tmp, dropped it in the target folder, and waited a minute for the cron job to run it.
+
+Level 24: Required a 4-digit PIN to go with the previous password. I wrote a brute-force bash loop to generate all combinations from 0000 to 9999, fired them at the server via nc, and waited until it accepted the correct pairing.
